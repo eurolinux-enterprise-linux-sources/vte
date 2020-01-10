@@ -1,0 +1,23 @@
+From 5dc9b3ce32070f1a7040b8ed24d9d463ad6a67b0 Mon Sep 17 00:00:00 2001
+From: Behdad Esfahbod <behdad@behdad.org>
+Date: Tue, 11 May 2010 20:49:10 +0000
+Subject: Bug 614658 - text selection with mouse is buggy when using the shift key
+
+---
+diff --git a/src/vte.c b/src/vte.c
+index b7fbff3..5f55335 100644
+--- a/src/vte.c
++++ b/src/vte.c
+@@ -7113,6 +7113,10 @@ vte_terminal_button_press(GtkWidget *widget, GdkEventButton *event)
+ 				vte_terminal_extend_selection(terminal,
+ 							      x, y,
+ 							      !terminal->pvt->selecting_restart, TRUE);
++				/* The whole selection code needs to be
++				 * rewritten.  For now, put this here to
++				 * fix bug 614658 */
++				terminal->pvt->selecting = TRUE;
+ 				handled = TRUE;
+ 			}
+ 			break;
+--
+cgit v0.8.3.1
