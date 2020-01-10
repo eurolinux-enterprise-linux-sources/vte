@@ -1,0 +1,25 @@
+From c5ff71e924d7b3598e332392c4cc4c19e89a7d6f Mon Sep 17 00:00:00 2001
+From: Christian Persch <chpe@gnome.org>
+Date: Sat, 16 Oct 2010 00:02:07 +0200
+Subject: [PATCH] Plug refcount leak
+
+The leaked VtePty leaked FDs, too. Bug #632257.
+---
+ src/vte.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/vte.c b/src/vte.c
+index 72aa1a1..d1ed0e5 100644
+--- a/src/vte.c
++++ b/src/vte.c
+@@ -3670,6 +3670,7 @@ vte_terminal_fork_command_full(VteTerminal *terminal,
+ 
+         vte_terminal_set_pty_object(terminal, pty);
+         vte_terminal_watch_child(terminal, pid);
++        g_object_unref (pty);
+ 
+         if (child_pid)
+                 *child_pid = pid;
+-- 
+1.8.1.4
+
