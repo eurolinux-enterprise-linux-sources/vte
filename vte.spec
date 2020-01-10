@@ -4,7 +4,7 @@
 
 Name: vte
 Version: 0.25.1
-Release: 6%{?dist}
+Release: 7%{?dist}
 Summary: A terminal emulator
 License: LGPLv2+
 Group: User Interface/X
@@ -41,6 +41,11 @@ Patch2: vte-CVE-2010-2713.patch
 # fix is upstream
 Patch3: vte-0.25.90-extended-select.patch
 
+# No cursor in some vte based terminals
+# https://bugzilla.redhat.com/show_bug.cgi?id=658774
+# fix is upstream
+Patch4: vte-0.25.90-cursor-invisible.patch
+
 %description
 VTE is a terminal emulator widget for use with GTK+ 2.0.
 
@@ -66,6 +71,7 @@ vte.
 %patch1 -p1 -b .fullscreen-redraw
 %patch2 -p1 -b .CVE-2010-2713
 %patch3 -p1 -b .extended-select
+%patch4 -p1 -b .cursor-invisible
 
 %build
 PYTHON=%{_bindir}/python`%{__python} -c "import sys ; print sys.version[:3]"`
@@ -119,6 +125,9 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/python*/site-packages/gtk-2.0/*.a
 %doc %{_datadir}/gtk-doc/html/%{name}
 
 %changelog
+* Thu Jul 28 2011 Tomas Bzatek <tbzatek@redhat.com> 0.25.1-7
+- Fix invisible cursor in some applications (#658774)
+
 * Fri Jan 28 2011 Tomas Bzatek <tbzatek@redhat.com> 0.25.1-6
 - Fix extending selection in gnome-terminal does not refresh the buffer (#650884)
 
