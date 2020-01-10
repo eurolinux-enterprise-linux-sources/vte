@@ -1,0 +1,32 @@
+From 082e4c8fbf515af5c1510a4dece99e0161b5995b Mon Sep 17 00:00:00 2001
+From: Debarshi Ray <debarshir@gnome.org>
+Date: Wed, 14 Mar 2018 15:50:18 +0100
+Subject: [PATCH] widget: Restore it to the list of active terminals when
+ visible
+
+https://bugzilla.gnome.org/show_bug.cgi?id=794214
+---
+ src/vte.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/src/vte.c b/src/vte.c
+index ccb9312e9ec2..e776e550da14 100644
+--- a/src/vte.c
++++ b/src/vte.c
+@@ -7385,6 +7385,13 @@ vte_terminal_set_visibility (VteTerminal *terminal, GdkVisibilityState state)
+ 		 * when we set it to TRUE when becoming obscured */
+ 		terminal->pvt->invalidated_all = FALSE;
+ 
++		if (terminal->pvt->active == NULL) {
++			_vte_debug_print (VTE_DEBUG_TIMEOUT,
++				"Adding terminal to active list\n");
++			terminal->pvt->active = active_terminals =
++				g_list_prepend (active_terminals, terminal);
++		}
++
+ 		/* if all unobscured now, invalidate all, otherwise, wait
+ 		 * for the expose event */
+ 		if (state == GDK_VISIBILITY_UNOBSCURED) {
+-- 
+2.14.3
+
