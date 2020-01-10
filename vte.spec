@@ -4,7 +4,7 @@
 
 Name: vte
 Version: 0.25.1
-Release: 8%{?dist}
+Release: 9%{?dist}
 Summary: A terminal emulator
 License: LGPLv2+
 Group: User Interface/X
@@ -47,9 +47,14 @@ Patch3: vte-0.25.90-extended-select.patch
 Patch4: vte-0.25.90-cursor-invisible.patch
 
 # gnome-terminal gives "too many open files" error
-# https://bugzilla.redhat.com/show_bug.cgi?id=963221
+# https://bugzilla.redhat.com/show_bug.cgi?id=732391
 # fix is upstream
 Patch5: vte-plug-refcount-leak.patch
+
+# gnome-terminal / vte very slow when doing 'cat' of a large text file
+# https://bugzilla.redhat.com/show_bug.cgi?id=1063741
+# fix is upstream
+Patch6: vte-fix-performance-regression-with-only-one-active-term.patch
 
 %description
 VTE is a terminal emulator widget for use with GTK+ 2.0.
@@ -78,6 +83,7 @@ vte.
 %patch3 -p1 -b .extended-select
 %patch4 -p1 -b .cursor-invisible
 %patch5 -p1 -b .plug-refcount-leak
+%patch6 -p1 -b .fix-performance-regression-with-only-one-active-term
 
 %build
 PYTHON=%{_bindir}/python`%{__python} -c "import sys ; print sys.version[:3]"`
@@ -131,8 +137,11 @@ rm -f $RPM_BUILD_ROOT/%{_libdir}/python*/site-packages/gtk-2.0/*.a
 %doc %{_datadir}/gtk-doc/html/%{name}
 
 %changelog
-* Wed May 15 2013 Zeeshan Ali <zeenix@redhat.com> 0.25.1-8
-- Fix FD leaks (#963221)
+* Wed May 21 2014 Zeeshan Ali <zeenix@redhat.com> 0.25.1-9
+- Fix performance regression with only one active terminal widget (#1063741).
+
+* Tue May  7 2013 Zeeshan Ali <zeenix@redhat.com> 0.25.1-8
+- Fix FD leaks (#732391)
 
 * Thu Jul 28 2011 Tomas Bzatek <tbzatek@redhat.com> 0.25.1-7
 - Fix invisible cursor in some applications (#658774)

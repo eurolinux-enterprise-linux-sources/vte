@@ -1,0 +1,27 @@
+From 2b4f4f1eea9dd87e27142ee02c973ce7ae9afd3c Mon Sep 17 00:00:00 2001
+From: Egmont Koblinger <egmont@gmail.com>
+Date: Mon, 13 Jan 2014 17:42:49 +0100
+Subject: [PATCH] Fix performance regression with only one active terminal
+ widget.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=721944
+---
+ src/vte.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/vte.c b/src/vte.c
+index 60dea9b..9058af6 100644
+--- a/src/vte.c
++++ b/src/vte.c
+@@ -4593,7 +4593,7 @@ vte_terminal_io_read(GIOChannel *channel,
+ 		if (max_bytes) {
+ 			max_bytes = terminal->pvt->max_input_bytes / max_bytes;
+ 		} else {
+-			max_bytes = VTE_MAX_INPUT_READ;
++			max_bytes = terminal->pvt->max_input_bytes;
+ 		}
+ 		bytes = terminal->pvt->input_bytes;
+ 
+-- 
+1.9.0
+
